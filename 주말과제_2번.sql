@@ -1,0 +1,35 @@
+SELECT D.DNAME AS 부서명,
+       STDDEV(담당고객수) AS 표준편차
+FROM (
+    SELECT D.DEPTNO, TRUNC(COUNT(DISTINCT C.ID) / COUNT(DISTINCT E.EMPNO),2) AS 담당고객수
+    FROM CUSTOMER C
+    INNER JOIN EMP E ON C.ACCOUNT_MGR = E.EMPNO
+    INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO
+    GROUP BY D.DEPTNO, E.EMPNO
+) SUB
+INNER JOIN DEPT D ON SUB.DEPTNO = D.DEPTNO
+GROUP BY D.DNAME;
+
+-- spool csv
+
+set heading on
+set pagesize 300
+set echo off
+set term off
+set trimspool on
+set linesize 300
+set feedback off
+set timing off
+spool/home/oracle/conn_dbms.csv
+SELECT D.DNAME AS 부서명,
+       STDDEV(담당고객수) AS 표준편차
+FROM (
+    SELECT D.DEPTNO, TRUNC(COUNT(DISTINCT C.ID) / COUNT(DISTINCT E.EMPNO),2) AS 담당고객수
+    FROM CUSTOMER C
+    INNER JOIN EMP E ON C.ACCOUNT_MGR = E.EMPNO
+    INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO
+    GROUP BY D.DEPTNO, E.EMPNO
+) SUB
+INNER JOIN DEPT D ON SUB.DEPTNO = D.DEPTNO
+GROUP BY D.DNAME;
+spool off
