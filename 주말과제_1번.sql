@@ -115,3 +115,17 @@ WHERE TRUNC(MONTHS_BETWEEN(SYSDATE, BIRTH_DT)/12) >= 60 AND CREDIT_LIMIT <= 200 
 -- 마케팅 테이블 조회 
 SELECT * 
 FROM MARKETING;
+
+
+-- spool csv
+set heading on
+set pagesize 300
+set echo off
+set term off
+set trimspool on
+set linesize 300
+set feedback off
+SET TIMING OFF
+spool/home/oracle/customer_list.csv
+SELECT * FROM marketing;
+spool off
