@@ -1,133 +1,117 @@
 select * from place;
 
-
---»õ·Î¿î ÁÖ¼Ò ÄÃ·³ »ý¼º
+--ìƒˆë¡œìš´ ì£¼ì†Œ ì»¬ëŸ¼ ìƒì„±
 ALTER TABLE PLACE
-ADD ÁÖ¼Ò VARCHAR(256);
+ADD ì£¼ì†Œ VARCHAR(256);
 
--- null °ª Ã¼Å©ÇØ¼­ µµ·Î¸íÀüÃ¼ÁÖ¼Ò¿¡ nullÀÌ ÀÖ´Â °æ¿ì ¼ÒÀçÁöÀüÃ¼ÁÖ¼Ò ³ÖÀ½
+SELECT ì£¼ì†Œ
+FROM PLACE
+WHERE ì£¼ì†Œ IS NULL;
+
+-- null ê°’ ì²´í¬í•´ì„œ ë„ë¡œëª…ì „ì²´ì£¼ì†Œì— nullì´ ìžˆëŠ” ê²½ìš° ì†Œìž¬ì§€ì „ì²´ì£¼ì†Œ ë„£ìŒ
 UPDATE PLACE
-SET ÁÖ¼Ò = NVL(µµ·Î¸íÀüÃ¼ÁÖ¼Ò, ¼ÒÀçÁöÀüÃ¼ÁÖ¼Ò);
+SET ì£¼ì†Œ = NVL(ë„ë¡œëª…ì „ì²´ì£¼ì†Œ, ì†Œìž¬ì§€ì „ì²´ì£¼ì†Œ);
 
--- ÁÖ¼Ò°¡ nullÀÎ °æ¿ì(µµ·Î¸íÀüÃ¼ÁÖ¼Ò¿Í ¼ÒÀçÁöÀüÃ¼ÁÖ¼Ò µÑ ´Ù nullÀÎ °æ¿ì)µ¥ÀÌÅÍ »èÁ¦  
+-- ë§Œì•½ ë„ë¡œëª…ì „ì²´ì£¼ì†Œì™€ ì†Œìž¬ì§€ì „ì²´ì£¼ì†Œê°€ ë‘˜ ë‹¤ null ì¸ í–‰ ì‚­ì œ
 DELETE FROM PLACE
-WHERE ÁÖ¼Ò IS NULL;
-
--- ÁÖ¼Ò°¡ nullÀÎ °ª È®ÀÎ
-SELECT * FROM PLACE
-WHERE ÁÖ¼Ò IS NULL;
-
--- ÁÖ¼Ò¿¡¼­ µÎ ¹øÂ° ½ºÆäÀÌ½º¸¦ ±âÁØÀ¸·Î µ¥ÀÌÅÍ¸¦ ÀÚ¸§(½Ã/±º/±¸)
-UPDATE PLACE
-SET ÁÖ¼Ò = SUBSTR(ÁÖ¼Ò, 1, INSTR(ÁÖ¼Ò, ' ', 1, 2) - 1);
+WHERE ì£¼ì†Œ IS NULL;
 
 SELECT * FROM PLACE;
 
--- COUNT(*)°ªÀÌ 10 ÀÌÇÏÀÌ¸é DELETE
+-- ì‹œ/êµ¬/êµ°ê¹Œì§€ ì¶”ì¶œ(ë‘ ë²ˆì§¸ ìŠ¤íŽ˜ì´ìŠ¤ ê¸°ì¤€)
+UPDATE PLACE
+SET ì£¼ì†Œ = SUBSTR(ì£¼ì†Œ, 1, INSTR(ì£¼ì†Œ, ' ', 1, 2) - 1);
+
+SELECT * FROM PLACE;
+
+-- COUNT(*)ê°’ì´ 10 ì´í•˜ì´ë©´ DELETE (10ì´í•˜ëŠ” ìœ ì˜ë¯¸í•œ ë°ì´í„°ê°€ ì•„ë‹ˆê¸° ë•Œë¬¸)
 DELETE FROM PLACE
-WHERE ÁÖ¼Ò IN (
-  SELECT ÁÖ¼Ò
+WHERE ì£¼ì†Œ IN (
+  SELECT ì£¼ì†Œ
   FROM PLACE
-  GROUP BY ÁÖ¼Ò
+  GROUP BY ì£¼ì†Œ
   HAVING COUNT(*) <= 10
 )
--- ÁÖ¼Ò¸¦ ±âÁØÀ¸·Î count(*)
-SELECT ÁÖ¼Ò, COUNT(*)
+
+-- ì£¼ì†Œë¥¼ ê¸°ì¤€ìœ¼ë¡œ  ëŒ€ê¸°ì˜¤ì—¼ë¬¼ì§ˆë°°ì¶œì„¤ì¹˜ ì‚¬ì—…ìž¥ ìˆ˜ ì§‘ê³„
+SELECT ì£¼ì†Œ, COUNT(*)
 FROM PLACE
-GROUP BY ÁÖ¼Ò
+GROUP BY ì£¼ì†Œ
 ORDER BY COUNT(*) DESC;
 
+commit;
+
+DELETE FROM PLACE
+ ì£¼ì†Œ IS NULL;
+
+-- customer í…Œì´ë¸” ì¡°íšŒ
 SELECT * FROM CUSTOMER;
 DESC CUSTOMER;
 
--- »õ·Î¿î CUSTOMERÀÇ ÁÖ¼Ò°ªÀ» ÀúÀåÇÒ CUSTOMERADD Å×ÀÌºí »ý¼º
+-- ìƒˆë¡œìš´ CUSTOMERADD í…Œì´ë¸” ìƒì„±
 CREATE TABLE CUSTOMERADD (
   ADDRESS1 VARCHAR2(100)
 );
 
--- CUSTOMERADD Å×ÀÌºí È®ÀÎ
 SELECT *
 FROM CUSTOMERADD;
-
--- CUSTOMERADD Å×ÀÌºí¿¡ ADDRESS1 °ª ³Ö±â
+-- CUSTOMERADD í…Œì´ë¸”ì— ADDRESS1 ê°’ ë„£ê¸°
 INSERT INTO CUSTOMERADD (ADDRESS1)
 SELECT ADDRESS1
 FROM CUSTOMER;
 
--- CUSTOMERADD Å×ÀÌºí¿¡¼­ DCODE·Î ÁÖ¼Ò º¯È¯
-UPDATE CUSTOMERADD SET ADDRESS1 
-= DECODE(SUBSTR(ADDRESS1,1,2), '¼­¿ï', '¼­¿ïÆ¯º°½Ã',
-'¿ï»ê', '¿ï»ê±¤¿ª½Ã',
-'ºÎ»ê', 'ºÎ»ê±¤¿ª½Ã',
-'´ëÀü', '´ëÀü±¤¿ª½Ã',
-'ÀÎÃµ', 'ÀÎÃµ±¤¿ª½Ã',
-'´ë±¸', '´ë±¸±¤¿ª½Ã',
-'±¤ÁÖ', '±¤ÁÖ±¤¿ª½Ã',
-'¼¼Á¾', '¼¼Á¾Æ¯º°ÀÚÄ¡½Ã',
-'°æ±â', '°æ±âµµ',
-'°­¿ø', '°­¿øµµ',
-'Àü³²', 'Àü¶ó³²µµ',
-'ÀüºÏ', 'Àü¶óºÏµµ',
-'Ãæ³²', 'ÃæÃ»³²µµ',
-'ÃæºÏ', 'ÃæÃ»ºÏµµ',
-'°æ³²', '°æ»ó³²µµ',
-'°æºÏ', '°æ»óºÏµµ',
-'Á¦ÁÖ', 'Á¦ÁÖÆ¯º°ÀÚÄ¡µµ') || ' ' ||SUBSTR(ADDRESS1,4,(INSTR(ADDRESS1,' ',1,1)));
+-- CUSTOMERADD í…Œì´ë¸”ì—ì„œ DCODEë¡œ ì£¼ì†Œ ë³€í™˜
+SELECT * FROM CUSTOMERADD;
 
--- CUSTOMERADD Å×ÀÌºí¿¡¼­ ¹®ÀÚ¿­ ¿À¸¥ÂÊ ¸Ç ³¡¿¡ °ø¹éÀÌ ÀÖ´Â °æ¿ì Á¦°Å
+SELECT * FROM CUSTOMERADD;
+
+UPDATE CUSTOMERADD SET ADDRESS1 
+= DECODE(SUBSTR(ADDRESS1,1,2), 'ì„œìš¸', 'ì„œìš¸íŠ¹ë³„ì‹œ',
+'ìš¸ì‚°', 'ìš¸ì‚°ê´‘ì—­ì‹œ',
+'ë¶€ì‚°', 'ë¶€ì‚°ê´‘ì—­ì‹œ',
+'ëŒ€ì „', 'ëŒ€ì „ê´‘ì—­ì‹œ',
+'ì¸ì²œ', 'ì¸ì²œê´‘ì—­ì‹œ',
+'ëŒ€êµ¬', 'ëŒ€êµ¬ê´‘ì—­ì‹œ',
+'ê´‘ì£¼', 'ê´‘ì£¼ê´‘ì—­ì‹œ',
+'ì„¸ì¢…', 'ì„¸ì¢…íŠ¹ë³„ìžì¹˜ì‹œ',
+'ê²½ê¸°', 'ê²½ê¸°ë„',
+'ê°•ì›', 'ê°•ì›ë„',
+'ì „ë‚¨', 'ì „ë¼ë‚¨ë„',
+'ì „ë¶', 'ì „ë¼ë¶ë„',
+'ì¶©ë‚¨', 'ì¶©ì²­ë‚¨ë„',
+'ì¶©ë¶', 'ì¶©ì²­ë¶ë„',
+'ê²½ë‚¨', 'ê²½ìƒë‚¨ë„',
+'ê²½ë¶', 'ê²½ìƒë¶ë„',
+'ì œì£¼', 'ì œì£¼íŠ¹ë³„ìžì¹˜ë„') || ' ' ||SUBSTR(ADDRESS1,4,(INSTR(ADDRESS1,' ',1,1)));
+
+-- ì˜¤ë¥¸ìª½ ê¸€ìžì— ê³µë°±ì´ ìžˆëŠ” ê²½ìš° ì œê±°
 UPDATE CUSTOMERADD
 SET ADDRESS1 = RTRIM(ADDRESS1)
 WHERE ADDRESS1 LIKE '% ';
 
--- CUSOMERADD Å×ÀÌºí È®ÀÎ
-SELECT * FROM CUSTOMERADD;
+-- ì£¼ì†Œê°’ì„ ê¸°ì¤€ìœ¼ë¡œ join í•˜ê³  ì‚¬ì—…ìž¥ëŒ€ë¹„ê³ ê°ìˆ˜ ê³„ì‚°
 
--- PLACE¿Í CUSTOMERADD Å×ÀÌºíÀ» ÁÖ¼Ò, ADDRESS¸¦ ±âÁØÀ¸·Î JOIN 
-SELECT A.ADDRESS1, A.°¹¼ö AS °í°´ÀÎ¿ø¼ö , B.°¹¼ö AS ¿À¿°¹°Áú¹èÃâ¼³Ä¡»ç¾÷Àå¼ö, ROUND(A.°¹¼ö/ B.°¹¼ö, 2) AS »ç¾÷Àå´ëºñ°í°´¼ö
+SELECT A.ADDRESS1, A.ê°¯ìˆ˜ AS ê³ ê°ì¸ì›ìˆ˜ , B.ê°¯ìˆ˜ AS ì˜¤ì—¼ë¬¼ì§ˆë°°ì¶œì„¤ì¹˜ì‚¬ì—…ìž¥ìˆ˜, ROUND(A.ê°¯ìˆ˜/ B.ê°¯ìˆ˜, 2) AS ì‚¬ì—…ìž¥ëŒ€ë¹„ê³ ê°ìˆ˜
 FROM
-(SELECT ADDRESS1, COUNT(*) AS °¹¼ö
+(SELECT ADDRESS1, COUNT(*) AS ê°¯ìˆ˜
 FROM CUSTOMERADD
 GROUP BY ADDRESS1) A
 JOIN
-(SELECT ÁÖ¼Ò, COUNT(*) AS °¹¼ö
+(SELECT ì£¼ì†Œ, COUNT(*) AS ê°¯ìˆ˜
 FROM PLACE
-WHERE ÁÖ¼Ò IS NOT NULL
-GROUP BY ÁÖ¼Ò) B
-ON A.ADDRESS1=B.ÁÖ¼Ò
-ORDER BY »ç¾÷Àå´ëºñ°í°´¼ö;
---ORDER BY ¿À¿°¹°Áú¹èÃâ¼³Ä¡»ç¾÷Àå¼ö DESC;
+WHERE ì£¼ì†Œ IS NOT NULL
+GROUP BY ì£¼ì†Œ) B
+ON A.ADDRESS1=B.ì£¼ì†Œ
+--ORDER BY ì‚¬ì—…ìž¥ëŒ€ë¹„ê³ ê°ìˆ˜;
+ORDER BY ì˜¤ì—¼ë¬¼ì§ˆë°°ì¶œì„¤ì¹˜ì‚¬ì—…ìž¥ìˆ˜ DESC;
 
--- CUSTOMER¿¡¼­ ÁÖ¼Ò°¡ °æ±âµµ È­¼ºÀÎ °æ¿ì Á¶È¸
-SELECT * 
-FROM CUSTOMER
-WHERE ADDRESS1 LIKE '%°æ±â È­¼º%';
--- CUSTOMER¿¡¼­ ÁÖ¼Ò°¡ °æ±âµµ È­¼ºÀÎ °æ¿ì Á¶È¸
-SELECT * 
-FROM CUSTOMER
-WHERE ADDRESS1 LIKE '%ÀÎÃµ ¼­±¸%';
--- PLACE¿¡¼­ ÁÖ¼Ò°¡ ÀÎÃµ±¤¿ª½Ã ¼­±¸ÀÎ °æ¿ì Á¶È¸
-SELECT *
-FROM PLACE
-WHERE ÁÖ¼Ò LIKE '%ÀÎÃµ±¤¿ª½Ã ¼­±¸%';
-
-
-SELECT ADDRESS, COUNT(*)
-FROM CUSTOMERADD
-GROUP BY ADDRESS
-ORDER BY COUNT(*) AS DESC;
-
-SELECT * 
-FROM CUSTOMER;
-
--- [¸¶ÄÉÆÃ] ÀÎÃµ ¼­±¸¿¡ »ç´Â Áúº´ °íÀ§Çè±º ¸¸ 60¼¼ ÀÌ»ó & Àú½Å¿ëÀÚ(Ä«µåÇÑµµ 500¸¸¿ø ÀÌÇÏ)°í°´¿¡°Ô ¸¶½ºÅ© µîÀÇ »ýÇÊÇ° Áö¿ø
--- »õ·Î¿î Å×ÀÌºí MARKETING»ý¼º  
-
+-- ë§ˆì¼€íŒ… ëŒ€ìƒ ê³ ê° ì¶”ì¶œ
 CREATE TABLE MARKETING AS
 SELECT NAME, ADDRESS1, ADDRESS2, MOBILE_NO, CREDIT_LIMIT, BIRTH_DT,
        TRUNC(MONTHS_BETWEEN(SYSDATE, BIRTH_DT)/12) AS AGE
 FROM CUSTOMER
-WHERE TRUNC(MONTHS_BETWEEN(SYSDATE, BIRTH_DT)/12) >= 60 AND CREDIT_LIMIT <= 200 AND ADDRESS1 LIKE '%ÀÎÃµ ¼­±¸%'; 
+WHERE TRUNC(MONTHS_BETWEEN(SYSDATE, BIRTH_DT)/12) >= 60 AND CREDIT_LIMIT <= 200 AND ADDRESS1 LIKE '%ì¸ì²œ ì„œêµ¬%'; 
 
--- ¸¶ÄÉÆÃ Å×ÀÌºí »ý¼º    
+-- ë§ˆì¼€íŒ… í…Œì´ë¸” ì¡°íšŒ 
 SELECT * 
 FROM MARKETING;
