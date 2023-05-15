@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BonusCal {
-//	private static final String PRESIDENT = "PRESIDENT";
-//	private static final String ANALYST = "ANALYST";
 
 	public static void main(String[] args) throws SQLException {
 		Connection conn = null;
@@ -33,10 +31,9 @@ public class BonusCal {
 			}
 		}
 	}
-
+	// calculateBonus 메서드
 	public static void calculateBonus(Connection conn) {
 		// EMP 테이블에서 EMPNO, ENAME, JOB, SAL, COMM 컬럼 가져오기
-//		ResultSet rs1 = stmt.executeQuery("SELECT ENAME, EMPNO, JOB, SAL, COMM FROM EMP");
 		String empSql = "SELECT ENAME, EMPNO, JOB, SAL, COMM FROM EMP";
 		List<Map<String, Object>> empInfoList = new ArrayList<>();
 		try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(empSql)) {
@@ -52,8 +49,8 @@ public class BonusCal {
 			return;
 		}
 
-		System.out.println(empInfoList);
-
+//		System.out.println(empInfoList);
+		
 		// CUSTOMER 테이블에서 필요한 컬럼만 가져오기
 		String customerSql = "SELECT MGR_EMPNO, COUNT(*) AS CNT FROM CUSTOMER GROUP BY MGR_EMPNO";
 		Map<Integer, Integer> accountMgrMap = new HashMap<>();
@@ -68,7 +65,7 @@ public class BonusCal {
 			e.printStackTrace();
 		}
 
-		System.out.println(accountMgrMap);
+//		System.out.println(accountMgrMap);
 
 		// accountMgrMap에서 값이 100000보다 큰 키와 작은 키를 나눠서 리스트에 저장
 		List<Integer> higherKeys = new ArrayList<>();
@@ -81,16 +78,12 @@ public class BonusCal {
 				lowerKeys.add(entry.getKey());
 			}
 		}
-
-//		String ename = "";
-//			pstmt.setString(1, ename);
-
+		
+		// EMP 테이블에서 가져온 각 직원의 정보에 대해 보너스 계산 및 보너스 테이블에 삽입
 		for (Map<String, Object> empInfo : empInfoList) {
-
 			int empno = (int) empInfo.get("empno");
 			String job = (String) empInfo.get("job");
 			double comm = (double) empInfo.get("comm");
-
 			int bonus = 0;
 			// job이 president 혹은 analyst인 경우 bonus=0 
 			if (job.equals("PRESIDENT") || job.equals("ANALYST")) {
@@ -106,7 +99,6 @@ public class BonusCal {
 						+ "202306" + "','" + empno + "','" + (comm + bonus) + "')");
 
 			} catch (SQLException e) {
-				// result 행의 개수가 0보다 크지 않거나 그 이외의 경우 실패
 				e.printStackTrace();
 			}
 		}
